@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="it">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}ApeRiPorta{% endblock %}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.0.0/css/bootstrap2/bootstrap-switch.min.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Alfa+Slab+One" type="text/css">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300" type="text/css">
+	<link rel="stylesheet" href="/static/css/jumbotron-narrow.css">
+	<link rel="stylesheet" href="/static/css/style.css?v=201409242341">
+	<link rel="stylesheet" href="/static/css/Smiles.css">
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="header">
+			<ul class="nav nav-pills pull-right">
+				<li id="linkhome"><a title="Home" href="/"><i class="fa fa-home"></i></a></li>
+				<li id="linksign"><a title="Registrazione" href="/sign"><i class="fa fa-user"></i></a></li>
+				<li id="linkrank"><a title="Classifiche" href="/rank?r=last"><i class="fa fa-trophy"></i></a></li>
+				<li id="linksay"><a title="Di' qualcosa" href="/say"><i class="fa fa-microphone"></i></a></li>
+				{#<li id="linklog"><a title="Log aperture" href="/log"><i class="fa fa-list"></i></a></li>#}
+			</ul>
+			<h3 class="text-muted">ApeRiPorta 1.0.8</h3>
+		</div>
+	
+		{% block content %}
+		{% endblock %}
+
+		<div class="footer">
+			<p class="pull-left">&copy; Mau 2014 - 2015</p>
+		</div>
+
+    </div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.0.0/js/bootstrap-switch.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/locales/bootstrap-datepicker.it.min.js"></script>
+
+	{% block javascript %}
+	{% endblock %}
+
+</body>
+</html>

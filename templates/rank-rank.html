@@ -1,0 +1,58 @@
+
+<h2>Classifica {%
+	if wrank == 'day'
+	%} di oggi {%
+	elif wrank == 'week'
+	%} della settimana{%
+  elif wrank == 'month'
+  %} del mese — {{ fromdate|datetime('%B %Y') }} {%
+	elif wrank == 'period'
+	%} periodo: {{ fromdate|datetime('%d/%m/%Y') }} — {{ todate|datetime('%d/%m/%Y') }} {%
+	else %}
+	generale{% 
+	endif %}</h2>
+
+{% if rank %}
+<table class="table table-hover">  
+    <thead>  
+      <tr>  
+        <th class="rank">#</th>  
+        <th class="user">Utente</th>  
+        <th class="score">Punti</th>  
+        <th class="open">Win / Run</th>  
+        <th class="open">Open / Total</th>  
+      </tr>  
+    </thead>
+    <tbody> 
+    {% for item in rank %} 
+      <tr{% 
+      if loop.index == 1 
+      %} class="winner success"{% 
+      elif loop.index < 4 
+      %} class="podium info"{% 
+      elif item.0 == 0 
+      %} class="danger"{% 
+      endif %}>  
+        <td class="rank">{{ loop.index }}°</td>  
+        <td class="user">{% 
+          if loop.index == 1 
+          %}<img src="/static/img/icons/award_star_gold_1.png">{% 
+          elif loop.index == 2 
+          %}<img src="/static/img/icons/award_star_silver_3.png">{% 
+          elif loop.index == 3 
+          %}<img src="/static/img/icons/award_star_bronze_2.png">{% 
+          endif 
+          %} {{ item.5 }}</td>  
+        <td class="score">{{ item.0 }}</td>  
+        <td class="open">{{ item.1 }} / {{ item.2 }}</td>
+        <td class="open">{{ item.3 }} / {{ item.4 }}</td>  
+      </tr> 
+		</tbody>
+		{% endfor %}
+	</table>
+{% else %}
+	<p>Nessun risultato</p>
+{% endif %}
+{% if wrank != 'total' %}
+	<p class="small">Classifica basata sui dati raccolti da {{ fromdate|datetime('%A %d %B ore %H:%M') }} a {{ todate|datetime('%A %d %B ore %H:%M') }} </p>
+{% endif %}

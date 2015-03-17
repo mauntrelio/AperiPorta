@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Home{% endblock %}
+
+{% block content %}			
+	<div class="jumbotron">
+	   <p><a class="btn btn-lg btn-primary" id="apriporta" href="/open" role="button">APRI !!</a></p>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+
+	{% include "audio.html" %}
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#linkhome').addClass('active');
+		$('#apriporta').click(function(e){
+			e.preventDefault();
+			var sound = null;
+			$.get('/open', function(data){
+				if (data.winner==-1) {
+					window.location.href = '/sign';
+				} else {
+					$('#myModalBody h2').remove();
+					$('#myModalButton').removeClass('btn-success btn-danger btn-warning');
+					if (data.winner==1) {
+						$('#myModalLabel').html('Grande!!');
+						$('#myModalButton').html('Y<span class="smilesbig">&#x1F60A;</span>U WIN !!');
+						$('#myModalButton').addClass('btn-success');
+						var sound = 'win';
+						setTimeout(function(){check_win(data.lastopen)},{{config.RATE_TIME}}*1000+500);
+					} else if (data.winner==2) {
+						$('#myModalLabel').html('Ora anche basta...');
+						$('#myModalButton').html('BASTA!');
+						$('#myModalButton').addClass('btn-warning');
+						$('#myModalBody').append('<h2>Hai aperto meno di {{ config.IDLE_TIME }} secondi fa.</h2>');
+					} else {
+						$('#myModalLabel').html('Oh No!!');
+						$('#myModalButton').html('Y<span class="smilesbig">&#x1F622;</span>U LOSE !!');
+						$('#myModalButton').addClass('btn-danger');
+						$('#myModalBody').append('<h2>Ha aperto: ' + data.lastopener + '</h2>');
+						var sound = 'fail';
+					}
+					$('#myModal').modal();
+					if (sound) {
+						playSound(sound);
+					}
+				}
+			});
+		})
+
+	});
+	</script>
+
+	{% include "modal.html" %}
+
+{% endblock %}

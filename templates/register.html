@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Registrazione{% endblock %}
+
+{% block content %}			
+	<div class="jumbotron">
+		{% if not user %}
+			<p>Devi registrarti prima di aprire la porta</p>
+		{% endif %}
+		{#<h1 id="ip">{{ ip }}</h1>#}
+		<form id="register" action="/sign" method="POST">
+			<p>			
+				<label for="username">Il tuo nome:</label>
+				<input type="text" class="form-control input-lg" name="username" id="username" value="{{ username }}" maxlength="15"/>
+				{# <span class="small">Attenzione: verranno aggiornati tutti i risultati in classifica associati a questo IP.</span> #}
+			</p>
+			<p>
+				{% if user %}
+					<input type="checkbox" name="updatedbuser" id="updatedbuser"> <label class="small" for="updatedbuser">Aggiorna tutte le passate aperture di <strong>{{user}}</strong> con il nuovo nome</label>
+				{% endif %}
+			</p>
+			<p>
+				<input type="checkbox" name="updatedbip" id="updatedbip"> <label class="small" for="updatedbip">Aggiorna tutte le passate aperture di <strong>{{ip}}</strong> non assegnate</label>
+			</p>
+			<p class="btn-normal">
+				<input type="submit" class="btn btn-default" value="Registra"/>
+			</p>
+		</form>	
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#linksign').addClass('active');
+		$('#register').submit(function(e){
+			e.preventDefault();
+			$.post('/sign',$(this).serialize(),function(data){
+				$('#myModalBody').html('');
+				if (data.status == 'OK') {
+					$('#myModalLabel').html('Ok');
+				} else {
+					$('#myModalLabel').html('Errore!');
+				}
+				$('#myModalBody').append('<h2>' + data.message + '</h2>');
+				$('#myModal').modal();
+			})
+		});
+	});
+	</script>
+
+	{% include "modal.html" %}
+
+{% endblock %}

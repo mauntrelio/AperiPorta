@@ -1,0 +1,47 @@
+
+<h2>Elenco aperture</h2>
+
+{% if rank %}
+<table class="table table-hover">  
+    <thead>
+      <th>Data</th>
+      <th>Ora</th>
+      <th>Ha aperto</th>
+      <th class="rank">Punti</th>
+    </thead>
+    <tbody> 
+    {% for item in rank %} 
+      <tr{% if item.2 %} class="success podium"{% endif %} style="cursor: pointer" onclick="location.href='/rank?r={{ item.0 }}'">  
+        <td><a href="/rank?r={{ item.0 }}">{{ item.0|sqltime("%A %d %B") }}</a></td>  
+        <td><a href="/rank?r={{ item.0 }}"><i class="fa fa-clock-o"></i> {{ item.0|sqltime("%H:%M:%S") }}</a></td>  
+        <td>{{ item.1 }}</td>  
+        <td class="rank">{% if item.2 %}{{ item.2 }}{% endif %}</td> 
+      </tr> 
+		</tbody>
+		{% endfor %}
+	</table>
+
+  {#
+  <ul class="pagination">
+    <li{% if pp == None %} class="disabled"{% endif %}><a href="/rank?w=list&amp;p=1">&laquo;</a></li>
+    {% for i in range()%}
+      <li class="active"><a href="#">1</a></li>
+    {% endfor %}
+    <li{% if np == None %} class="disabled"{% endif %}><a href="/rank?w=list&amp;p={{ lp }}">&laquo;</a>
+  </ul>
+  #}
+
+  
+  <ul class="pager">
+  {% if np != None %}
+    <li class="previous"><a href="/rank?r=list&amp;p={{ np }}">&larr; Precedenti</a></li>
+  {% endif %}
+  {% if pp != None %}
+    <li class="next"><a href="/rank?r=list&amp;p={{ pp }}">Successive &rarr;</a></li>
+  {% endif %}
+  </ul>
+  
+
+{% else %}
+	<p>Nessun risultato</p>
+{% endif %}

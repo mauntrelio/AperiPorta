@@ -1,0 +1,30 @@
+body {font-family: 'Open Sans', sans-serif;}
+pre {text-shadow: 1px 1px 1px #C0C0C0; font-family: monospace; overflow-y: scroll; max-height: 400px; margin: 20px 0;}
+.jumbotron h1, .modal-body h1 {font-size: 45px;}
+.jumbotron .btn, .modal-body .btn {font-size: 70px;margin-top: 20px; font-family: 'Alfa Slab One', cursive; letter-spacing: 5px; text-shadow: 2px 2px 10px #000;}
+.footer {font-size: 12px;}
+#myModalBody {text-align: center;}
+span.smilesbig {font-family: 'Smiles'; font-size: 79px;line-height: 1.0em;}
+span.smiles {font-family: 'Smiles'; line-height: 1.0em;}
+ul.nav {font-size: 18px;}
+.jumbotron .btn-normal .btn {font-size: 22px; font-family: 'Open Sans', sans-serif; letter-spacing: 1px; font-weight: bold; text-shadow: 0px 0px 0px;}
+#register, #say {text-align: left;}
+#myModalBody > ul {font-size: 25px; text-align: left;}
+.nav-pills > li > a {
+    border-radius: 50%;
+}
+
+label {font-weight: normal;}
+table {border-collapse: separate;}
+
+tr.winner {font-weight: bold; font-size: 1.2em;}
+tr.podium {font-weight: bold;}
+th.rank, td.rank {text-align: center;}
+th.user, td.user {}
+th.date, td.date {}
+th.delay, td.delay {text-align: right;}
+th.score, td.score {text-align: right;}
+th.open, td.open {text-align: right;}
+
+.smaller {font-size: 70%;}
+.datepicker{z-index:1151 !important;}

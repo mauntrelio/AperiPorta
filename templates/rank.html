@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Classifica{% endblock %}
+
+{% block content %}		
+	<div class="container">
+
+		<div class="btn-group">
+			
+			<div class="btn-group">
+			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			  	Ordini di arrivo
+			     <span class="caret"></span>
+			  </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="/rank?r=last">Ultima apertura</a></li>
+			      <li><a href="/rank?r=list">Lista aperture</a></li>
+			    </ul>
+            </div>
+		    
+			<div class="btn-group">
+			    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			      Classifiche
+			      <span class="caret"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="/rank?r=day">Giornaliera</a></li>
+			      <li><a href="/rank?r=week">Settimanale</a></li>
+			      <li><a href="/rank?r=month">Mensile</a></li>
+			      <li><a href="/rank?r=total">Generale</a></li>
+			      <li><a id="dates" href="#modalDates">Scegli periodo &hellip;</a></li>
+			    </ul>
+            </div>
+     	 
+     	 </div>
+
+		{% if type == 'order' %}
+			{% include "rank-order.html" %}
+		{% elif type == 'list' %}
+			{% include "rank-list.html" %}
+		{% else %}
+			{% include "rank-rank.html" %}
+		{% endif %}
+
+	</div>
+
+	<div class="modal fade" id="modalDates" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+			<form action="/rank" method="get" id="period">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Seleziona periodo</h4>
+      </div>
+      <div class="modal-body">
+					<p>
+						<label for="inizio">Data inizio</label><br>
+						<input type="text" id="inizio" name="s" class="datepicker">
+					</p>
+					
+					<p>
+						<label for="fine">Data fine</label><br>
+						<input type="text" id="fine" name="e" class="datepicker">
+					</p>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">OK</button>
+      </div>
+
+			</form>
+    </div>
+  </div>
+</div>	
+
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#dates').click(function() {
+				$('#modalDates').modal('show');
+				$('#modalDates').on('shown.bs.modal',function(){$('#inizio').focus()});
+				$('#inizio').datepicker({format: 'yyyy-mm-dd',weekStart: 1, language: 'it'})
+					.on('changeDate', function(){
+							$(this).datepicker('hide');
+							$('#fine').focus();	
+						});
+				$('#fine').datepicker({format: 'yyyy-mm-dd',weekStart: 1, language: 'it'})
+					.on('changeDate', function(){
+							$(this).datepicker('hide');
+							$('#period').submit();
+						})
+
+			});
+		$('#linkrank').addClass('active');
+	});
+	</script>
+{% endblock %}

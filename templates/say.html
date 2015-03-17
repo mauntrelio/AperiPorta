@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Di' qualcosa{% endblock %}
+
+{% block content %}			
+	<div class="jumbotron">
+		<form id="say" action="/say" method="POST">
+			<p>			
+				<label for="message">Messaggio:</label>
+				<textarea class="form-control input-lg" name="message" id="message"></textarea>
+			</p>
+			<p class="btn-normal">
+				<input type="submit" class="btn btn-default" value="Dillo!"/>
+				<button class="btn btn-default" id="hour"><i class="fa fa-clock-o"></i></button>
+			</p>
+		</form>	
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#linksay').addClass('active');
+		$('#say').submit(function(e){
+			e.preventDefault();
+			if ($('#message').val() != '') {
+				$.post('/say',$(this).serialize(), function(){$('#message').val('');});
+			}
+		});
+		$('#hour').click(function(e){
+			$.get('/hour');
+		});
+	});
+	</script>
+{% endblock %}

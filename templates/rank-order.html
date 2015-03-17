@@ -1,0 +1,48 @@
+{% if wrank == 'last' and datetime == 0 %}
+	<h3>Non è ancora mai stato aperto!</h3>
+{% else %}
+	<h3>{% if wrank == 'last' %}Ultima apertura — {% else %}Apertura di {% endif %}{{ datetime|sqltime("%A %d %B <i class=\"fa fa-clock-o\"></i> %H:%M:%S") }}</h3>
+{% endif %}
+{% if rank %}
+	<table class="table table-hover">  
+        <thead>  
+          <tr>  
+            <th class="rank">#</th>  
+            <th class="user">Utente</th>  
+            <th class="date">Ora</th>  
+            <th class="delay">Ritardo</th>
+            <th class="score">Punti assegnati</th>
+          </tr>  
+        </thead>
+        <tbody> 
+        {% for item in rank %} 
+          <tr{% 
+          if item.3 == 0 
+          %} class="danger"{% 
+          elif loop.index == 1 
+          %} class="winner success"{% 
+          elif loop.index < 4 
+          %} class="podium info"{% 
+          endif %}>  
+            <td class="rank">{{ loop.index }}°</td>  
+            <td class="user" title="{{ item.6 }}">{% if loop.index == 1 %}<i class="fa fa-trophy"></i>{% endif %} {{ item.1 }}</td>  
+            <td class="date">{{ item.4|sqltime("%H:%M:%S") }}.<span class="smaller">{{ item.4|sqltime("%f") }}</span></td>  
+            <td class="delay">{% if loop.index > 1 %}{{ "%0.6f" % item.5 }}{% endif %}</td>  
+            <td class="score">{{ item.3 }}</td>  
+          </tr> 
+			</tbody>
+			{% endfor %}
+		</table>
+
+	<ul class="pager">
+	{% if op %}
+		<li class="previous"><a href="/rank?r={{ op }}">&larr; Precedente</a></li>
+	{% endif %}
+	{% if on %}
+		<li class="next"><a href="/rank?r={{ on }}">Successiva &rarr;</a></li>
+	{% endif %}
+	</ul>
+
+{% else %}
+	<p>Nessun risultato</p>
+{% endif %}

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Open{% endblock %}
+
+{% block content %}			
+	<div class="jumbotron">
+	{% if winner == 1 %}
+    	<p><a class="btn btn-lg btn-success" href="/rank?r=last" role="button">Y<span class="smilesbig">&#x1F60A;</span>U WIN !!</a></p>
+	{% elif winner == 2 %}
+    	<p><a class="btn btn-lg btn-warning" href="/rank?r=last" role="button">BASTA!</a></p>
+		<h2>Hai aperto meno di {{ config.IDLE_TIME }} secondi fa.</h2>
+	{% else %}
+		<p><a class="btn btn-lg btn-danger" href="/rank?r=last" role="button">Y<span class="smilesbig">&#x1F622;</span>U LOSE !!</a></p>
+		<h1>Ha aperto: {{ lastopener }}</h1>
+	{% endif %}
+	</div>
+{% endblock %}
+
+
+{% block javascript %}
+
+	{% include "audio.html" %}
+
+	<script type="text/javascript">
+	{% if winner == 1 %}
+		var sound = 'win';
+		setTimeout(function(){check_win({{lastopen}})},{{config.RATE_TIME}}*1000+2000);
+	{% elif winner == 0 %}
+		var sound = 'fail';
+	{% else %}
+		var sound = null;
+	{% endif %}
+
+	window.onload = function() {
+		if (sound) {
+			playSound(sound);
+		}
+	}
+	</script>
+{% endblock %}
