@@ -128,19 +128,13 @@ class ApriPorta(BaseHTTPRequestHandler):
 
     def check_user(self):
         """Controllo utente, da cookie: username"""
-        #"""Controllo utente, da cookie o mapping ip: username"""
-        # primo controllo: cookie
+
         if 'cookie' in self.headers:
             cookie = Cookie.SimpleCookie()
             cookie.load(self.headers['cookie'])
             if 'user' in cookie:
                 if cookie['user'].value:
                     self.user = cgi.urllib.unquote(cookie['user'].value)
-
-        # secondo controllo, ricerca in USERS        
-        #if not self.user:
-        #    if self.client_address[0] in USERS:
-        #        self.user = USERS[self.client_address[0]]
 
     def send_answer(self):
         """Gestione generica invio contenuti HTTP"""
@@ -212,7 +206,6 @@ class ApriPorta(BaseHTTPRequestHandler):
         
         elif self.command == 'POST':
             
-            #global USERS
             response = {}
             error = ''
 
@@ -227,9 +220,6 @@ class ApriPorta(BaseHTTPRequestHandler):
                 response['status'] = 'ERROR'
                 response['message'] = error
             else:
-                #USERS.update({self.client_address[0]:username})
-                #with open(basedir + '/users.json', 'w') as outfile:
-                #    json.dump(USERS, outfile, sort_keys=True, indent=4)
                 
                 if 'updatedbuser' in self.form.keys():
                     if self.form['updatedbuser'].value == 'on':
@@ -539,7 +529,6 @@ def format_datetime(timestamp,format="%X %x"):
     try:
         locale.setlocale(locale.LC_TIME, "it_IT.UTF8")
         return datetime.fromtimestamp(timestamp).strftime(format).decode('utf8')
-        #return time.strftime(format,time.localtime(timestamp)).decode('utf8')
     except:
         return 'Undefined'
 
@@ -595,7 +584,6 @@ class DbServer(threading.Thread):
 
 if __name__ == '__main__':
 
-    #USERS = json.load(open(basedir + '/users.json','r'))
     config = json.load(open(basedir + '/config.json','r'))
     config = configClass(**config)
     db = basedir + '/db/apriporta.db'
