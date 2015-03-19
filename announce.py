@@ -13,8 +13,9 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 def time2sql(time,config):
   return int(round( (time - config["TIMESTAMP_OFFSET"]) * config["TIMESTAMP_MULTIPLIER"] ))
 
-def get_winner(time_start, db):
-  time_end = time.time()
+def get_winner(time_start, time_end=0, db):
+  if time_end ==0:
+    time_end = time.time()
   conn = sqlite3.connect(db)
   cur = conn.cursor()
   sql = "SELECT sum(points), user FROM openings WHERE datetime >= ? AND datetime < ? \
@@ -45,7 +46,7 @@ if __name__ == '__main__':
   if gsett > -1:
     time_start = time.time() - gsett*86400 - 3600*ora - 60*minuto - secondo
     # annunciare vincitore della settimana
-    print u"Il vincitore dell'apriporta della settimana è..., %s!!" % get_winner(time_start,db)
+    print u"Il vincitore dell'apriporta della settimana è..., %s!!" % get_winner(time_start,0,db)
 
   time.sleep(5)
 
@@ -55,7 +56,7 @@ if __name__ == '__main__':
   if gmese > -1:    
     time_start = time.time() - (gmese - 1)*86400 - 3600*ora - 60*minuto - secondo
     # annunciare vincitore del mese
-    print u"Il vincitore dell'apriporta del mese è..., %s!!" % get_winner(time_start,db)
+    print u"Il vincitore dell'apriporta del mese è..., %s!!" % get_winner(time_start,0,db)
 
   time.sleep(5)
 
