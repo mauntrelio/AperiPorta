@@ -1,5 +1,5 @@
 sftp-config*
 test*
-log*
-db*
-static/audio/cache*
+log/*
+db/*
+static/audio/cache/*

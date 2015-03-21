@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}ApeRiPorta — Log{% endblock %}
+
+{% block content %}
+	
+	<p>
+		<input type="checkbox" id="autoreload" checked>	<span style="padding-left: 10px">Auto refresh</span>
+	</p>
+
+	<pre id="log">{{log}}</pre>
+	
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#autoreload").bootstrapSwitch();
+			$('#log').scrollTop($('#log')[0].scrollHeight);
+			$('#linklog').addClass('active');
+			setTimeout(autoreload,5000);
+		});
+
+		function autoreload(){
+			if (document.getElementById('autoreload').checked) {
+				//window.location.reload();
+				$('#log').load('/log',function(){$('#log').scrollTop($('#log')[0].scrollHeight)});
+			}
+			setTimeout(autoreload,5000);
+		}
+
+	</script>
+{% endblock %}
+
