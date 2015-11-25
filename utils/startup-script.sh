@@ -6,13 +6,13 @@
 # Required-Stop: $syslog
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
-# Short-Description: Put a short description of the service here
-# Description: Put a long description of the service here
+# Short-Description: Apriporta Raspberry 
+# Description: Apriporta Raspberry
 ### END INIT INFO
  
 # Change the next 3 lines to suit where you install your script and what you want to call it
-DIR=/var/home/giannozzo/apriporta
-DAEMON=$DIR/apriporta_0_1.py
+DIR=/var/apriporta
+DAEMON=$DIR/apriporta.py
 DAEMON_NAME=apriporta
  
 # This next line determines what user the script runs as.

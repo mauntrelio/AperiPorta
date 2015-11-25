@@ -22,7 +22,11 @@ import json
 import mimetypes
 import shutil
 
+# TODO: put this into configuration
 locale.setlocale(locale.LC_TIME, "it_IT.UTF8")
+
+# TODO: avoid all this global variables!!
+# Couldn't they be properties of the Apriporta class?
 basedir = os.path.dirname(os.path.abspath(__file__))
 template_path = basedir + '/templates/'
 GLOCK = threading.Lock()
@@ -48,6 +52,7 @@ class ApriPorta(BaseHTTPRequestHandler):
         mimetypes.init() # legge i mime.types di sistema
     extensions_map = mimetypes.types_map.copy()    
 
+    # TODO: remove log
     def log_message(self, format, *args):
 
         # log generico
@@ -75,7 +80,8 @@ class ApriPorta(BaseHTTPRequestHandler):
 
         self.template_vars = {'user': self.user, 'config': config, 'ip': self.client_address[0]}  
         self.url = cgi.urlparse.urlparse(self.path)
-        # routing
+        
+        # ROUTING
 
         if self.url.path == '/':        # home page
             self.home()
@@ -296,6 +302,8 @@ class ApriPorta(BaseHTTPRequestHandler):
     def rank(self):
         """Visualizzazione classifica"""
         # faccio il parsing della query string
+        # TODO: improve this code defining smaller procedures
+        # or a dedicated subclass
         qs = cgi.urlparse.parse_qs(self.url.query)
         wrank = 'day'
         # cerco in qs il parametro r (rank)
@@ -491,6 +499,8 @@ class ApriPorta(BaseHTTPRequestHandler):
     def time2sql(self,time):
         return int(round( (time - config.TIMESTAMP_OFFSET) * config.TIMESTAMP_MULTIPLIER ))
         
+# TODO: try to create cachedir if it does not exist
+# TODO: fix TTS (Google does not allow us anymore)        
 def play_message(message,cachedir='./'):
     """suona un messaggio (google translate tts + cache)"""
     message = message.encode('utf-8')
@@ -504,7 +514,6 @@ def play_message(message,cachedir='./'):
         # necessito di un UA vero altrimenti Google TTS ha problemi di charset
         ua = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0"
         os.system('wget --user-agent="%s" -q "http://translate.google.com/translate_tts?tl=it&q=%s" -O %s && mpg123 -q %s &' % (ua, quoted_message, file_sound, file_sound))
-
 
 def valid_ip(address):
     try:
@@ -541,6 +550,10 @@ def format_sqltime(sqltime,format="%X %x"):
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Gestisce ogni richiesta client HTTP in un thread separato."""
 
+# TODO: implemet DBClient and DBServer correctly in a different lib/module
+# DBCmd (client) and DBServer are the classes, they should be instantiated with
+# a single call and connection between the two is made via the DBQueue, which
+# at the moment is a global variable: BAD!
 class DbCmd:
     """Classe che implementa i comandi SQL e consente di recuperare eventuali dati in comunicazione con 
     il thread che gestisce il DB SQLite. In pratica è il client SQL"""
@@ -584,10 +597,14 @@ class DbServer(threading.Thread):
 
 if __name__ == '__main__':
 
+    # TODO: could this be part of the ApriPorta init?
     config = json.load(open(basedir + '/config.json','r'))
     config = configClass(**config)
+
+    # TODO: init database with an empty schema if file missing
     db = basedir + '/db/apriporta.db'
 
+    # TODO: could this be part of the ApriPorta init?
     jinja_env = Environment(loader=FileSystemLoader(template_path),autoescape=False)
     jinja_env.filters['sqltime'] = format_sqltime
     jinja_env.filters['datetime'] = format_datetime
@@ -596,17 +613,21 @@ if __name__ == '__main__':
     os.system("amixer cset numid=3 1")
     
     # configura il GPIO
+    # TODO: could this be part of the ApriPorta init?
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.cleanup()
     GPIO.setup(config.GPIO_OPEN,GPIO.OUT)
     GPIO.output(config.GPIO_OPEN,GPIO.LOW)
 
+    # TODO: this should definitely be part of the ApriPorta init
+    # and DB client/server should be implemented correctly
     # thread gestione database 
     DBQueue = Queue()
     DbServer(db)
     
     # fa partire il server
+    # TODO: how to pass init params to ApriPorta?
     server = ThreadedHTTPServer((config.SERVER_ADDRESS, config.SERVER_PORT), ApriPorta)
     server.serve_forever()
     
