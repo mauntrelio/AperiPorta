@@ -45,7 +45,7 @@ class configClass:
 
 class ApriPorta(BaseHTTPRequestHandler):
 
-    server_version = "ApeRiPorta/1.0.8"
+    server_version = "ApeRiPorta/1.0.9"
 
     # mimetypes per file statici
     if not mimetypes.inited:
@@ -500,9 +500,9 @@ class ApriPorta(BaseHTTPRequestHandler):
         return int(round( (time - config.TIMESTAMP_OFFSET) * config.TIMESTAMP_MULTIPLIER ))
         
 # TODO: try to create cachedir if it does not exist
-# TODO: fix TTS (Google does not allow us anymore)        
 def play_message(message,cachedir='./'):
     """suona un messaggio (google translate tts + cache)"""
+    charlen = len(message)
     message = message.encode('utf-8')
     file_sound = cachedir + md5(message).hexdigest() + '.mp3'
     if os.path.isfile(file_sound):
@@ -512,8 +512,11 @@ def play_message(message,cachedir='./'):
         # recupero da google, suono e cacho
         quoted_message = cgi.urllib.quote(message)
         # necessito di un UA vero altrimenti Google TTS ha problemi di charset
-        ua = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0"
-        os.system('wget --user-agent="%s" -q "http://translate.google.com/translate_tts?tl=it&q=%s" -O %s && mpg123 -q %s &' % (ua, quoted_message, file_sound, file_sound))
+        ua = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36"
+        # necessito altresì di altri stratagemmi per non farmi beccare
+        os.system(('curl -s -o %s "https://translate.google.com/translate_tts?ie=UTF-8&q=%s&tl=it&total=1&idx=0&textlen=%s&client=t&prev=input" '
+            '-H "Referer: https://translate.google.com/?hl=it" -H "Accept-Encoding: identity;q=1, *;q=0" -H "User-Agent: %s" -H "Range: bytes=0-" --compressed'
+            '&& mpg123 -q %s &') % (file_sound, quoted_message, charlen, ua, file_sound))
 
 def valid_ip(address):
     try:
