@@ -52,7 +52,7 @@ class ApriPorta(BaseHTTPRequestHandler):
         mimetypes.init() # legge i mime.types di sistema
     extensions_map = mimetypes.types_map.copy()    
 
-    # TODO: remove log
+    # TODO: remove log / create log folder when missing
     def log_message(self, format, *args):
 
         # log generico
@@ -512,11 +512,11 @@ def play_message(message,cachedir='./'):
         # recupero da google, suono e cacho
         quoted_message = cgi.urllib.quote(message)
         # necessito di un UA vero altrimenti Google TTS ha problemi di charset
-        ua = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36"
+        ua = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36"
         # necessito altresì di altri stratagemmi per non farmi beccare
-        os.system(('curl -s -o %s "https://translate.google.com/translate_tts?ie=UTF-8&q=%s&tl=it&total=1&idx=0&textlen=%s&client=t&prev=input" '
+        os.system(('curl -s -o %s "https://translate.google.com/translate_tts?ie=UTF-8&q=%s&tl=it-IT&client=tw-ob" '
             '-H "Referer: https://translate.google.com/?hl=it" -H "Accept-Encoding: identity;q=1, *;q=0" -H "User-Agent: %s" -H "Range: bytes=0-" --compressed'
-            '&& mpg123 -q %s &') % (file_sound, quoted_message, charlen, ua, file_sound))
+            '&& mpg123 -q %s &') % (file_sound, quoted_message, ua, file_sound))
 
 def valid_ip(address):
     try:
@@ -617,15 +617,16 @@ if __name__ == '__main__':
     
     # configura il GPIO
     # TODO: could this be part of the ApriPorta init?
+    # NO: but it should be part of the server init
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.cleanup()
     GPIO.setup(config.GPIO_OPEN,GPIO.OUT)
     GPIO.output(config.GPIO_OPEN,GPIO.LOW)
 
-    # TODO: this should definitely be part of the ApriPorta init
+    # TODO: this should definitely be part of the server init
     # and DB client/server should be implemented correctly
-    # thread gestione database 
+    # DBQueue should be a param of DBServer initialization
     DBQueue = Queue()
     DbServer(db)
     
